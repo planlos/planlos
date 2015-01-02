@@ -1,0 +1,9 @@
+*~
+*.pyc
+env/*
+__pycache__
+bower_components
+node_modules
+foundation-icons
+.webassets
+.webassets-cache
