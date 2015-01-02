@@ -37,6 +37,22 @@ angular
         templateUrl: 'views/mediapool.html',
         controller: 'MediapoolCtrl'
       })
+      .when('/tools', {
+        templateUrl: 'views/tools.html',
+        controller: 'ToolsCtrl'
+      })
+      .when('/account', {
+        templateUrl: 'views/account.html',
+        controller: 'AccountCtrl'
+      })
+      .when('/bugs', {
+        templateUrl: 'views/bugs.html',
+        controller: 'BugsCtrl'
+      })
+      .when('/users', {
+        templateUrl: 'views/users.html',
+        controller: 'UsersCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
