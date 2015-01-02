@@ -4,7 +4,7 @@ from flask import Blueprint
 
 mod = Blueprint('angular', __name__,
                 static_url_path="",
-                static_folder='static')
+                static_folder='static/app')
 
 
 @mod.route('/')
