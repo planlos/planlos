@@ -1,6 +1,9 @@
-// bower:scss
-// endbower
 @import
     "normalize",  // import from bower_components/foundation
     "settings",   // your custom _settings.scss file in app/styles directory
+    "foundation-icons",   // your custom _settings.scss file in app/styles directory
     "foundation"; // import from bower_components/foundation
+
+.icon-bar-container{
+  padding-left: 0;
+}

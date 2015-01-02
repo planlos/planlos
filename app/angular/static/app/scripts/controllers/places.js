@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name staticApp.controller:AboutCtrl
+ * @name staticApp.controller:PlacesCtrl
  * @description
- * # AboutCtrl
+ * # PlacesCtrl
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('AboutCtrl', function ($scope) {
+  .controller('PlacesCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
