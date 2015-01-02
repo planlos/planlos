@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from flask.ext.restful import fields
-from flask.ext.restful.types import *
 
 from datetime import datetime
 import dateutil

@@ -11,7 +11,6 @@ from ..services.user_service import No_Such_User
 import datetime
 from flask.ext.restful.utils import cors
 from flask.ext.restful import reqparse
-from flask.ext.restful.types import *
 
 from .mappings import *
 

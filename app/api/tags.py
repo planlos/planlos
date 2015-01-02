@@ -7,7 +7,6 @@ from ..models.events import Tag
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with
 from flask.ext.restful import reqparse
-from flask.ext.restful.types import *
 
 from .mappings import *
 
