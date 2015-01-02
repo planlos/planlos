@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block jsscript %}
+<script src="/static/appjs/_user_event_form.js"></script>
+{% endblock %}
+
+
+
+{% block content %}
+<h2>Location</h2>
+<form action="" method="POST" class="well form-horizontal">
+    <div class="control-group">
+      {% include "tools/locations/_location_form.html" %}
+    </div>
+</form>
+{% endblock %}
+

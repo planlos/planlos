@@ -1,0 +1,9 @@
+<div class="page-header">
+  <ul class="nav nav-pills">
+	<li {% if request.path == '/orte' %}class='active'{% endif %}><a href="{{url_for('locations.locations')}}">Alle</a></li>
+	<li {% if request.path == '/orte/bremen' %}class='active'{% endif %}><a href="{{url_for('locations.location_region', regiontag='Bremen')}}">Bremen</a></li>
+	<li {% if request.path == '/orte/oldenburg' %}class='active'{% endif %}><a href="{{url_for('locations.location_region', regiontag='Oldenburg')}}">Oldenburg</a></li>
+	<li {% if request.path == '/orte/umzu' %}class='active'{% endif %}><a href="{{url_for('locations.location_region', regiontag='Umzu')}}" >Umzu</a></li>
+	<li class="pull-right" {% if request.path == '/eintragen' %}class='active'{% endif %}><a class="btn-success " href="/eintragen">Eintragen</a></li>
+  </ul>
+</div>

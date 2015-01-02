@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block content %}
+{% from "macros/_forms.html" import render_errors %}
+<p>
+<h2>Signup</h2>
+<form method='POST' action='' class="well form-horizontal">
+  {{form.hidden_tag() }}
+  {{form.next }}
+
+  {{ render_errors(form.username) }}
+  {{form.username.label }}
+  {{form.username }}<br/>
+
+  {{ render_errors(form.password) }}
+  {{form.password.label }}
+  {{form.password }}<br/>
+
+  {{ render_errors(form.password2) }}
+  {{form.password2.label }}
+  {{form.password2 }}<br/>
+
+  {{ render_errors(form.email) }}
+  {{form.email.label }}
+  {{form.email }}<br/>
+
+  {{ render_errors(form.invite_code1) }}
+  {{form.invite_code1.label }}
+  {{form.invite_code1 }}<br/>
+
+  {{ render_errors(form.invite_code2) }}
+  {{form.invite_code2.label }}
+  {{form.invite_code2 }}<br/>
+
+
+{{form.submit(class="btn btn-primary")}}
+</form>
+</p>
+
+
+
+{% endblock %}

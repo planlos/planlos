@@ -1,0 +1,31 @@
+<table>
+<thead>
+  <tr><th colspan="7" align="center">{{calobj.day_of_month|date('%B (%Y)')}}</th></tr>
+</thead>
+<tr>
+<th><span style="width: 5px; padding: 2px;" class="label">Mo</span></th>
+<th><span style="width: 5px; padding: 2px;" class="label">Di</span></th>
+<th><span style="width: 5px; padding: 2px;" class="label">Mi</span></th>
+<th><span style="width: 5px; padding: 2px;" class="label">Do</span></th>
+<th><span style="width: 5px; padding: 2px;" class="label">Fr</span></th>
+<th><span style="width: 5px; padding: 2px;" class="label">Sa</span></th>
+<th><span style="width: 5px; padding: 2px;" class="label">So</span></th>
+</tr>
+
+{% set cal = calobj.calendar %}
+{% for week in cal %}
+  <tr>
+	{% for day in week %}
+      <td>
+		<span class="pull-right">
+		{% if day.0 and day.1 %}
+			<strong><a href="/termine/{{ calobj.year() }}/{{ calobj.month() }}/{{day.0 }}">&nbsp;{{day.0}}</a></strong>
+		{% elif day.0 %}
+		  <strong>{{day.0}}</strong>
+		{% endif %}
+		</span>
+	  </td>
+	{% endfor %}
+  </tr>
+{% endfor %}
+</table>

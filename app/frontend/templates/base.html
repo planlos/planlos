@@ -1,0 +1,64 @@
+{% from "macros/_forms.html" import render_field %}
+{% from "macros/_forms.html" import render_field_hidden %}
+
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foundation</title>
+	<link href='http://fonts.googleapis.com/css?family=Exo:300,500|Economica:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+	  {% block css %}
+		{# for css extensions #}
+	  {% endblock css %}
+	
+      {% assets "foundation" %}
+	  <link rel="stylesheet" type="text/css" media="screen" href="{{ ASSET_URL }}" />
+      {% endassets %}
+	  <link rel="stylesheet" href="/static/appcss/osm.css" type="text/css" media="screen"/>
+  </head>
+  <title>Planlos</title>
+  <body>
+    <div class="row">
+	  <div class="large-12 columns large-centered">
+		<img data-interchange="[/static/img/planlos_large.jpg, (default)],
+							   [/static/img/planlos_large.jpg, (large)],
+							   [/static/img/planlos_medium.jpg, (medium)],
+							   [/static/img/planlos_small.jpg, (small)]" >
+							   <noscript>
+								 <img src="/static/img/planlos_large.jpg">
+							   </noscript>
+		<h1 class="exolight">LINKS UND UNKOMMERZIELL</h1>
+		<h1 class="exolight">TERMINKALENDER FÜR BREMEN UND UMZU</h1>
+	  </div>
+	  <div class="large-12 columns">
+		{% if not current_user.is_anonymous() %}
+		  {% if current_user.is_admin() %}
+			<li><a href="{{url_for('tools.index')}}">Tools</a></li>
+			<li><a href="{#{#url_for('admin.index')}#}">DB Admin</a></li>
+		  {% endif %}
+		{% endif %}
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+			{% for message in messages %}
+			  {{ message }}
+			{% endfor %}
+	  	  {% endif %}
+		{% endwith %}
+	  </div>
+	  <div class="large-12 columns">
+		{% block content %}
+		{% endblock %}
+	  </div>
+
+	{% assets "js_all" %}
+      <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+	{% endassets %}
+
+	{% block jsscript %}
+	  {# for in template extensions #}
+	{% endblock jsscript %}
+	</body>
+  </html>

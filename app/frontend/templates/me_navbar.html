@@ -1,0 +1,10 @@
+<div class="page-header">
+  <ul class="nav nav-pills">
+	<li {% if request.path == '/me' %}class='active'{% endif %}><a href="/me"><span class="glyphicon glyphicon-home"></span></a></li>
+	<li {% if request.path == '/me/termine' %}class='active'{% endif %}><a href="/me/termine">Meine Termine</a></li>
+	<li {% if request.path == '/me/flyer' %}class='active'{% endif %}><a href="/me/flyer">Meine Flyer</a></li>
+	<li {% if request.path == '/me/profile' %}class='active'{% endif %}><a href="/me/profile">Mein Profil</a></li>
+	<li class="pull-right" {% if request.path == '/logout' %}class='active'{% endif %}><a class="btn btn-sm btn-warning" href="{{url_for('userpages.logout')}}">Logout</a></li>
+  </ul>
+  <h1>{{header}} <small>{% if date and date2%}{{ date|date("%a %d") }}-{{ date2|date }}{% elif date %}{{ date|date }}{% endif %}</small></h1>
+</div>

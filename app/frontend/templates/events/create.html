@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block jsscript %}
+<script src="/static/appjs/_user_event_form.js"></script>
+{% endblock %}
+
+
+
+{% block content %}
+<h2>Events</h2>
+<form action="" method="POST" class="well form-horizontal">
+    <div class="control-group">
+      {% include "events/_event_form.html" %}
+    </div>
+</form>
+{% endblock %}

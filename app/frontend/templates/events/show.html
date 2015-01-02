@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block css %}
+  	<link rel="stylesheet" href="/static/libs/datepicker/css/datepicker.css" type="text/css" media="screen"/>
+{% endblock %}
+
+{% block jsscript %}
+<script src="/static/libs/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="/static/libs/underscore-min.js"></script>
+<script src="/static/libs/underscore.string.min.js"></script>
+<script>
+$(document).ready(function() {
+  jQuery('#dp4').datepicker({
+  weekStart: 1,
+  autoclose: true,
+  language: 'de',
+  forceParse: false
+  }).on('changeDate', function(ev){
+                     startDate = new Date(ev.date);
+                     $('#startDate').text($('#dp4').data('date'));
+                     var go_to_url = '/termine/' + String( startDate.getFullYear() ) +"/"+String( startDate.getMonth()+1)+"/"+String( startDate.getDate());
+                     document.location.href = go_to_url;
+
+  });
+/*
+  jQuery('#dp4').datepicker( {
+  weekStart: 1,
+  autoclose: true,
+  language: 'de',
+  forceParse: false}).on('changeDate', function(ev){
+  startDate = new Date(ev.date);
+  $('#startDate').text($('#dp4').data('date'));
+  });
+  $('#dp4').datepicker('hide');
+*/
+}); 
+
+</script>
+{% endblock  %}
+
+
+{% block content %}
+<div class="page-header">
+  <ul class="nav nav-pills">
+	<li {% if request.path == '/termine/heute' %}class='active'{% endif %}><a href="/termine/heute">Heute</a></li>
+	<li {% if request.path == '/termine/morgen' %}class='active'{% endif %}><a href="/termine/morgen">Morgen</a></li>
+	<li {% if request.path == '/termine/wochenende' %}class='active'{% endif %}><a href="/termine/wochenende" >Am Wochenende</a></li>
+	<li {% if request.path == '/termine/monat' %}class='active'{% endif %}><a href="/termine/monat">Monatsübersicht</a></li>
+	<li {% if request.path.startswith('/termine/20') %}class='active'{% endif %}>
+	  <a id="dp4" data-date="{{date|date("%d.%m.%Y")}}" data-date-format="dd.mm.yyyy" href="#">
+		<span id="startDate">{{date|date('%d.%m.%Y')}}</span>
+		<span class="glyphicon glyphicon-arrow-down"></span>
+			</a> 
+	</li>
+	<li class="pull-right" {% if request.path == '/eintragen' %}class='active'{% endif %}><a class="btn-success " href="/eintragen">Eintragen</a></li>
+  </ul>
+  <h1>{{header}} <small>{% if date and date2%}{{ date|date("%a %d") }}-{{ date2|date }}{% elif date %}{{ date|date }}{% endif %}</small></h1>
+
+  <h1>{{event.title}}</h1>
+  <p class="lead text-muted"><small>{{event.subtitle}}</small>{% if not event.is_pub %}&nbsp;<small><span class="label label-info">unveröffentlicht</span></small>{% endif %}</p>
+</div>
+<div class="row">
+  <div class="col-md-4">
+	<p><h4>{{event.dtstart|date}}</h4>
+	 <h4><span class="label label-primary">{{event.dtstart|date("%H:%M")}}</span>{% if event.dtend %} - <span class="label label-primary">{{event.dtend|date("%H:%M")}}</span>{% endif %}</h4></p>
+	<p><span class="text-muted"><strong>{{event.location}}</strong></span></p>
+	<p>
+	  {% for tag in event.tags %}
+		<span class="label label-success">{{tag}}</span>
+	  {% endfor %}
+	</p>
+
+	<p>
+	  {% for flyer in event.flyers %}
+		<div class="thumbnail">
+		  <img src="{{baseurl}}/{{size}}/{{flyer.filename}}" class="img-rounded">
+		</div><br/>
+	  {% endfor %}
+	</p>
+  </div>
+  <div class="col-md-6">
+	<h4>{{event.title}}</h4>
+	<p>{{event.desc}}</p>
+	<small><span class="text text-muted">zuletzt bearbeitet: {{event.modified_at|date("%A %d.%M.%y. - %H:%M:%S")}}</span></small>
+  </div>
+  <div class="col-md-2">
+	{% if event.owner == current_user or current_user.is_admin() %}
+	  <div class="pull-right">
+		<a class="btn btn-sm btn-success" href="{{url_for('events.event_edit', id=event.id)}}">bearbeiten</a>
+	  </div>
+	{% endif %}
+  </div>
+</div>
+
+<div class="content">
+
+
+<hr/>
+  <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Regelmäßige Termine</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Nächste Demo</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Nächstes Konzert</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+      </div>
+
+</div>
+{% endblock %}

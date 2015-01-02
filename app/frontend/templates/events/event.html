@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block content %}
+<div class="leaderboard">
+<h1>Event</h1>
+<h2>{{event.title}}</h2>
+<h3>{{event.subtitle}}</h3>
+<p>
+{{event.short}}
+</p>
+<p>
+{{event.desc}}
+</p>
+<p>
+Datum: {{event.dtstart| date("%d.%m")}}<br/>
+Beginn: {{event.dtstart| date("%H:%M")}}
+</p>
+
+
+</div>
+
+{% endblock %}

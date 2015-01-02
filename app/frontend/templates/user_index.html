@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block content %}
+{% include "users/me_navbar.html" %}
+<h1>Willkommen {{user.username}}!</h1>
+<h2>Was möchstest Du machen?</h2>
+
+Neuen Ort eintragen<br/>
+Neue Gruppe anlegen<br/>
+Eine Nachricht schreiben<br/>
+
+</p>
+{% endblock %}

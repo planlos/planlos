@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock pagenav %}
+
+{% block css %}
+  	<link rel="stylesheet" href="/static/libs/datepicker/css/datepicker.css" type="text/css" media="screen"/>
+{% endblock %}
+
+{% block jsscript %}
+<script src="/static/libs/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="/static/libs/underscore-min.js"></script>
+<script src="/static/libs/underscore.string.min.js"></script>
+<script src="/static/libs/rrule/rrule.js"></script>
+<script src="/static/libs/rrule/nlp.js"></script>
+<script src="/static/appjs/_event_form.js"></script>
+
+<script>
+function post_location(){
+  var data = {'referred_form': 'eventform'};
+    var arr = $('form').serializeArray();
+  $.each( arr, function(i, item) {
+     data[item.name] = item.value;
+  });
+  $.post('/api/storeforminsession', data );
+}
+</script>
+{% endblock  %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Termin eintragen</h1>
+</div>
+{% include "events/_event_form.html" %}
+
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+<h1>Login</h1>
+  <form method='POST' action='' class="form-horizontal">
+	{% include "_login_form.html" %}
+  </form>
+
+</div>
+<p>Passwort vergessen? <a href="{{url_for('userpages.resetpassword')}}">Click here</a></p>
+<p>Noch keinen Account? <a href="{{url_for('userpages.signup')}}">SignUp here</a></p>
+
+{% endblock %}

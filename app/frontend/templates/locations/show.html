@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+{% block jsscript %}
+<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript">
+function map_init()
+{
+  var map = new OpenLayers.Map('map');
+  map.addLayer(new OpenLayers.Layer.OSM());
+  var lonLat = new OpenLayers.LonLat( {{location.longitude}}, {{location.latitude}} ).transform(
+  new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+  map.getProjectionObject() // to Spherical Mercator Projection
+  );
+  var zoom=16;
+  var markers = new OpenLayers.Layer.Markers( "Markers" );
+  map.addLayer(markers);
+  markers.addMarker(new OpenLayers.Marker(lonLat));
+  map.setCenter(lonLat, zoom);
+}
+$(document).ready(map_init);
+</script>
+
+{% endblock %}
+
+
+{% block content %}
+{% include "locations/_location_nav.html" %}
+<div class="content">
+<div class="row">
+  <div class="col-md-8">
+	<h3>{{location.name}}
+	  <small>&nbsp;<span class="text-muted">{{location.shortdesc}}</span></small>
+	</h3>
+  </div>
+  <div class="col-md-4"></div>
+<div class="row">
+  <div class="col-md-8">
+	<div>
+	  {{location.desc}}
+	</div>
+  </div>
+  <div class="col-md-4">
+	<h4>Adresse</h4>
+	<address>
+	  {{location.addr}}
+	  {{location.email_contact}}
+	  {{location.url}}
+	</address>
+	{# photos #}
+	<h4>Karte</h4>
+	<div id="map" style="width:100%; height:400px;"></div>
+  </div>
+
+</div>
+<div class="row">
+</div>
+</div>
+
+
+
+<div class="content">
+
+
+<hr/>
+  <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Regelmäßige Termine</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Nächste Demo</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Nächstes Konzert</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+      </div>
+
+</div>
+{% endblock %}

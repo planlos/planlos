@@ -1,0 +1,91 @@
+@import "settings";
+@import "foundation";
+
+// Or selectively include components
+// @import
+//   "foundation/components/accordion",
+//   "foundation/components/alert-boxes",
+//   "foundation/components/block-grid",
+//   "foundation/components/breadcrumbs",
+//   "foundation/components/button-groups",
+//   "foundation/components/buttons",
+//   "foundation/components/clearing",
+//   "foundation/components/dropdown",
+//   "foundation/components/dropdown-buttons",
+//   "foundation/components/flex-video",
+//   "foundation/components/forms",
+//   "foundation/components/grid",
+//   "foundation/components/inline-lists",
+//   "foundation/components/joyride",
+//   "foundation/components/keystrokes",
+//   "foundation/components/labels",
+//   "foundation/components/magellan",
+//   "foundation/components/orbit",
+//   "foundation/components/pagination",
+//   "foundation/components/panels",
+//   "foundation/components/pricing-tables",
+//   "foundation/components/progress-bars",
+//   "foundation/components/reveal",
+//   "foundation/components/side-nav",
+//   "foundation/components/split-buttons",
+//   "foundation/components/sub-nav",
+//   "foundation/components/switch",
+//   "foundation/components/tables",
+//   "foundation/components/tabs",
+//   "foundation/components/thumbs",
+//   "foundation/components/tooltips",
+//   "foundation/components/top-bar",
+//   "foundation/components/type",
+//   "foundation/components/offcanvas",
+//   "foundation/components/visibility";
+
+$content-bg-color: #25A99B;
+$content-color: #00463F;
+$content-color-secondary: #077569;
+
+
+$contact-bg-color: #329BB9;
+$contact-color: #00463F;
+
+
+.exolight {
+		  font-family: $font-family-exo;
+		  font-weight: 300;
+		  
+}
+
+h2 small, .subheader {
+	color: 	$content-color-secondary; 
+}
+
+.contentbox {
+	background-color: $content-bg-color;
+	color:  $content-color;
+	padding-bottom: 1ex;
+}
+
+.contactbox {
+	background-color: $contact-bg-color;
+	color:  $contact-color;
+}
+
+
+.light {
+	font-weight:300;
+}
+
+.quote {
+	padding: 3ex;
+}
+
+.vcard {
+	border: 0;
+}
+
+.bcolor {
+	background-color: #2A8DA9;
+}
+
+.smallcontactbox {
+/*	padding: 1ex; */
+}

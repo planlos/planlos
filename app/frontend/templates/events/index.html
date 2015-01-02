@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block pagenav %}
+{% endblock %}
+
+{% block css %}
+  	<link rel="stylesheet" href="/static/libs/datepicker/css/datepicker.css" type="text/css" media="screen"/>
+{% endblock %}
+
+{% block jsscript %}
+<script src="/static/libs/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="/static/libs/underscore-min.js"></script>
+<script src="/static/libs/underscore.string.min.js"></script>
+<script>
+$(document).ready(function() {
+  jQuery('#dp4').datepicker({
+  weekStart: 1,
+  autoclose: true,
+  language: 'de',
+  forceParse: false
+  }).on('changeDate', function(ev){
+                     startDate = new Date(ev.date);
+                     $('#startDate').text($('#dp4').data('date'));
+                     var go_to_url = '/termine/' + String( startDate.getFullYear() ) +"/"+String( startDate.getMonth()+1)+"/"+String( startDate.getDate());
+                     document.location.href = go_to_url;
+
+  });
+/*
+  jQuery('#dp4').datepicker( {
+  weekStart: 1,
+  autoclose: true,
+  language: 'de',
+  forceParse: false}).on('changeDate', function(ev){
+  startDate = new Date(ev.date);
+  $('#startDate').text($('#dp4').data('date'));
+  });
+  $('#dp4').datepicker('hide');
+*/
+}); 
+
+</script>
+{% endblock  %}
+
+
+{% block content %}
+{% for group in entries|groupby('day') %}
+  <h2>{{ group.grouper|date('%A') }}&nbsp;<small>{{ group.grouper|date('%d.%m.') }}</small></h2>
+  {% for entry in group.list %}
+	<div {% if not entry.is_pub %}class="unpublished"{% endif %}>
+	  <p><strong><span class="label label-primary">{{entry.dtstart|date('%H:%M')}} Uhr</span>&nbsp;
+		  <a class="titlelink" href="{{url_for('events.termin_by_id', id=entry.id)}}">
+			{{entry.title|title}}
+		  </a>
+		</strong>{% if not entry.is_pub %}<span class="text-muted">&nbsp;(unveröffentlicht)</span>{% endif %}<br/><small>{{entry.subtitle|title}}&nbsp;|&nbsp;<strong>{{entry.location.name}}</strong>&nbsp;|&nbsp;{{entry.tags.0}}</small><a class="titlelink" href="{{url_for('events.termin_by_id', id=entry.id)}}">&nbsp;<span>...</span></a></p>
+	</div>
+  {% endfor %}
+{% endfor %}
+<hr/>
+  <!-- Example row of columns -->
+      <div class="row">
+        <div class="medium-4 columns">
+          <h2>Regelmäßige Termine</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="medium-4 columns">
+          <h2>Nächste Demo</h2>
+          <p><strong>{{next_demo.title}}</strong></p>
+		  {% if next_demo %}
+          <p>{{next_demo.location}} | {{next_demo.dtstart|date('%H:%M')}} Uhr</p>
+          <p><a class="btn btn-default" href="{{ url_for( 'events.termin_by_id', id=next_demo.id)}}">View details &raquo;</a></p>
+		  {% endif %}
+       </div>
+        <div class="medium-4 columns">
+          <h2>Nächstes Konzert</h2>
+		  {% if next_concert %}
+          <p><strong>{{next_concert.title}}</strong></p>
+          <p>{{next_concert.location}} | {{next_concert.dtstart|date('%H:%M')}} Uhr</p>
+          <p><a class="btn btn-default" href="{{ url_for( 'events.termin_by_id', id=next_concert.id)}}">View details &raquo;</a></p>
+		  {% endif %}
+        </div>
+      </div>
+
+{% endblock %}

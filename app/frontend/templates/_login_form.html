@@ -1,0 +1,10 @@
+{% from "macros/_forms.html" import render_field %}
+{% from "macros/_forms.html" import render_field_hidden %}
+{% from "macros/_forms.html" import render_field_without_label %}
+{% from "macros/_forms.html" import render_errors %}
+
+{{render_field_hidden(login_form.csrf_token) }}
+{{render_field(login_form.uid) }}
+{{render_field(login_form.password) }}
+{{render_field(login_form.remember) }}
+{{render_field(login_form.submit)}}

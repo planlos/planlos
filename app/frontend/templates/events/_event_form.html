@@ -1,0 +1,274 @@
+{% from "macros/_forms.html" import render_field as render_field %}
+{% from "macros/_forms.html" import render_field_hidden %}
+{% from "macros/_forms.html" import render_errors %}
+{% from "macros/_forms.html" import render_help %}
+{% from "macros/_forms.html" import render_field_without_label %}
+
+
+<script>
+var event_readonly = {{event.serialize()|safe}};
+</script>
+
+<div id="jsonrepr">
+
+</div>
+
+{% macro render_until_repeat(recurrence='None') %}
+  <div class="form-group {% if form.until.errors or form.repeat.errors %}error{% endif %}">
+	<label class="col-lg-3 control-label">Bis</label>
+	  {{form.until.label(class="control-label sr-only")}}
+	<div class="col-lg-2">
+	  {{form.until(class="col-lg-2 form-control datepicker col-md-1")|safe}} 
+	</div>
+	<label class="col-lg-1 control-label ">oder</label>
+	<div class="col-lg-3">
+	  {{form.repeat(class="form-control")|safe}}
+	</div>
+	<label class="col-lg-1 control-label">Wiederholungen {{ render_help('Entweder endet eure Wiederholung zu einem bestimmten Termin (sowas wie jeden Montag bis zum 24.12., dann nutzt ihr das erste Feld oder ihr habt eine feste Anzahl von Terminen (z.B. die nächsten drei Samstage), dann tragt ihr die Anzahl in das hintere Feld ein') }}
+	  {% if form.until.errors %}
+		{% for error in form.until.errors %}
+		  <div class="help-inline">{{ error }}</div>
+		{% endfor %}
+	  {% endif %}
+	  {% if form.repeat.errors %}
+		{% for error in form.repeat.errors %}
+		  <div class="help-inline">{{ error }}</div>
+		{% endfor %}
+	  {% endif %}
+	</label>
+  </div>
+{% endmacro %}
+
+<div class="col-md-8">
+	<form action="" method="POST" class="form-horizontal" id="event-form" role="form">
+	  {{ render_field_hidden(form.csrf_token) }}
+	  {{ render_field(form.title) }}
+	  {{ render_field(form.subtitle, rows="1") }}
+	  {{ render_field(form.desc, rows="10", class_='span5') }}
+
+	  <div class="form-group {% if form.location.errors %}has-error{% endif %}">
+		{{ form.location.label(class='col-lg-3 control-label')}}
+		<div class="col-lg-8">
+		  {{ form.location(class='form-control')|safe }}
+		</div>
+		<div class="col-lg-1">
+		  <a id="addlocationinline" class="btn" onclick="post_location()" href="{#{url_for('addlocation')}#}?next=/eintragen">
+			<span class="glyphicon glyphicon-plus-sign"></span>
+		  </a>
+		</div>
+		{% if form.location.errors %}
+		  {% for error in form.location.errors %}
+			<div class="help-block">{{ error }}</div>
+		  {% endfor %}
+		{% endif %}
+	  </div>
+	  {{ render_field(form.dtstart_date, class="datepicker form-control") }}
+	  {{ render_field(form.dtstart_time, class="timepicker form-control") }}
+	  {{ render_field(form.dtend, class="timepicker form-control") }}
+	  
+	  {{ render_field(form.recurrence, id="sched-select") }}
+	  
+      <!-- NONE (empty) -->
+	  <div id="scheduling-none">
+	  </div>
+
+	  <!-- DAILY -->
+	  <div id="scheduling-daily">
+		{{ render_until_repeat('daily') }}
+	  </div>
+
+	  <!-- WEEKLY -->
+	  <div id="scheduling-weekly">
+		<div class="form-group  {% if form.weekly_days.errors %}error{% endif %}">
+		  <label class="col-lg-3 control-label">An den Tagen</label>
+		  <div class="col-lg-9">
+			<div class="checkbox-inline">
+			  {{ form.weekly_days()}}
+			  {% if form.weekly_days.errors %}
+				{% for error in form.weekly_days.errors %}
+				  <span class="help-inline label">{{ error }}</span>
+				{% endfor %}
+			  {% endif %}
+			</div>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-lg-3 control-label">Jede</label>
+		  <div class="col-lg-3">
+			{{form.weekly_repeat(class="form-control")}}
+		  </div>
+		  <div class="col-lg-3">
+			Woche
+			<div class="glyphicon glyphicon-question-sign help-button" data-title="Hilfe" data-content="Tippe 1 für jede Woche und z.B. 3 für jede dritte Woche" data-placement="right"></div>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <!-- MONTHLY -->
+	  <div id="scheduling-monthly">
+		<div class="form-group {% if form.monthly_days.errors %}error{% endif %}">
+		  <label class="col-lg-3 control-label">Jeden folgenden Tag</label>
+		  <div class="col-lg-6">
+			&nbsp;
+			{{ form.monthly_days(class="checkbox inline")}}
+			{% if form.monthly_days.errors %}
+			  {% for error in form.monthly_days.errors %}
+				<span class="help-inline label">{{ error }}</span>
+			  {% endfor %}
+			{% endif %}
+		  </div>
+		</div>
+	  </div>
+
+	  <!-- MONTHLY (tag)-->
+	  <div id="scheduling-monthly-with-day">
+		<div class="control-group {% if form.monthly_days.errors %}error{% endif %}">
+		  <label class="control-label">Jeden folgenden Tag</label>
+		  <div class="controls">
+			<!--		{{ form.monthly_days(class="checkbox inline")}} -->
+			{% if form.monthly_days.errors %}
+			  {% for error in form.monthly_days.errors %}
+				<span class="help-inline label">{{ error }}</span>
+			  {% endfor %}
+			{% endif %}
+		  </div>
+		</div>
+	  </div>
+
+
+	  <!-- EXPERT -->
+	  <div id="scheduling-expert">
+		<div class="form-group">
+		  <label class="col-lg-3">iCal RRULE (RFC 5545)</label>
+		  <div class="col-lg-4">
+			<input class="form-control" type="text" id='rrule' name="rrule" />
+		  </div>
+		  <div class="col-lg-1">
+			<button class='btn btn-sm btn-success' id='rruleupdater'>Update</button>
+		  </div>
+		</div>
+	  </div>
+
+	  <!-- place tags here in hidden fields -->
+	  <div id="hidden-input-fields">
+	  </div>
+	  <!-- end of form -->
+	  {{ render_field(form.submit, class="btn btn-primary", id="save-event-form-btn")}}
+  </form >
+</div>
+
+<!-- TAGS -->
+<div class="col-md-4">
+
+	<p>
+	  <ul class="list-inline" id="event-tags-list">
+		{% if event is defined and event %}
+		  {% for tag in event.tags %}
+			<li>
+			  <span class="label label-primary label-sm event-tags-item">{{tag}}
+				<span class="glyphicon glyphicon-remove-circle event-tag-remover">
+				</span>
+			  </span>
+			</li>
+		{% endfor %}
+		{% endif %}
+	  </ul>
+	</p>
+	<p>
+	  <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#add-tag-modal">
+		<span class="glyphicon glyphicon-plus-sign"></span>&nbsp;Tag hinzufügen
+	  </button>
+	</p>
+	
+<!-- FLYERS -->
+<p>	  
+  <ul class="list-inline" id="event-flyers-list">
+	{% if event is defined and event %}
+	  {% for flyer in event.flyers %}
+		<li>
+		  <div class="thumbnail event-flyers-item" id="{{flyer.id}}">
+			<img src="{{config['UPLOADED_FLYERS_URL']}}/200/{{flyer.filename}}"
+				 class="img-rounded" />
+				 <a href="{{url_for('termin_remove_flyer', id=event.id, flyerid=flyer.id)}}">
+				   <span class="glyphicon glyphicon-remove-circle text-danger"></span>
+				 </a>
+		  </div>
+		</li>
+	  {% endfor %}
+	{% endif %}
+  </ul>
+</p>
+<p>
+  <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#add-flyer-modal">
+	<span class="glyphicon glyphicon-plus-sign"></span>&nbsp;Flyer hinzufügen
+  </button>
+</p>
+</div>
+
+<!-- Modal Tags -->
+<div class="modal fade" id="add-tag-modal" tabindex="-1" role="dialog" aria-labelledby="add-tag-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="add-tag-modal-label">Tags hinzufügen</h4>
+      </div>
+      <div class="modal-body">
+		<div id="event-tags-list-modal">
+		  <!-- tags get placed here -->
+		</div>
+		<p>Am häufigsten verwendete Tags (Schlagwörter)</p>
+		<div id="add-tag-modal-most-used">
+		  <!-- most used tags get placed here -->
+		</div>
+		<p>
+		  <form action="#" class="form form-inline">
+			<div class="form-group">
+			  <label class="control-label">Neues Tag hinzufügen</label>
+			  <input id="tag-input" role="form" class="form form-inline" />
+			  <button class="btn btn-default btn-sm" id="modal-tag-add-btn">Add</button>
+			</div>
+		</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="modal-tag-save-btn">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal Flyer -->
+<div class="modal fade" id="add-flyer-modal" tabindex="-1" role="dialog" aria-labelledby="add-flyer-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="add-flyer-modal-label">Flyer hinzufügen</h4>
+      </div>
+      <div class="modal-body">
+		<div id="event-flyer-list-modal">
+		  <!-- flyers get placed here -->
+		</div>
+		<p>Deine Flyer</p>
+		<!-- <div id="add-flyer-modal-gallery"> -->
+		  <!-- gallery gets placed here -->
+		  {% include 'events/_flyer_carousel.html' %}
+		<!-- </div> -->
+		<p>
+		  <form action="#" class="form form-inline">
+			<div class="form-group">
+			  <label class="control-label">Neues Tag hinzufügen</label>
+			  <input id="tag-input" role="form" class="form form-inline" />
+			  <button class="btn btn-default btn-sm" id="modal-flyer-add-btn">Add</button>
+			</div>
+		</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="modal-flyer-save-btn">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
