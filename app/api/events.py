@@ -80,7 +80,7 @@ class Event_Api(restful.Resource):
 
     @marshal_with(event_fields)
     def get(self,id):
-        return event_service.get_or_404(id) 
+        return event_service.get_or_404(id)
 
     def post(self, id):
         return self.patch(id)
