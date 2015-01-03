@@ -1,11 +1,14 @@
 @import
     "normalize",  // import from bower_components/foundation
+    "fonts",
     "settings",   // your custom _settings.scss file in app/styles directory
     "foundation-icons",   // your custom _settings.scss file in app/styles directory
     "foundation"; // import from bower_components/foundation
 
 .icon-bar-container{
   padding-left: 0;
+
+  font-family: "Exo", $body-font-family;
 }
 
 .panel > iframe{
