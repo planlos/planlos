@@ -81,20 +81,20 @@ class Event(db.Model):
     modified_at = db.Column(db.DateTime())
 
     likes = db.Column(db.Integer(), default=0)
-    
+
     location_id = db.Column(db.Integer(), db.ForeignKey('locations.id'))
     location = db.relationship('Location', backref='events')
 
 
     tags = db.relationship('Tag', secondary=tagrefs,
-                           cascade='all', 
+                           cascade='all',
                            backref=db.backref('events', lazy='dynamic'))
     # mediafiles
     flyers = db.relationship('Flyer', secondary=flyerrefs,
-                             cascade='all', 
+                             cascade='all',
                              backref=db.backref('events', lazy='dynamic'))
-    
-    # gender 
+
+    # gender
 
 
     # if dtstart and dtend are None then rrule is used

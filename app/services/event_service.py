@@ -6,6 +6,7 @@ from flask import abort
 from datetime import datetime
 from werkzeug.exceptions import Unauthorized
 from flask.ext.security.core import current_user
+from app import db
 
 class Event_Service(Service):
     __model__ = Event
@@ -18,7 +19,7 @@ class Event_Service(Service):
         db.session.add(model)
         db.session.commit()
         return model
-    
+
     def delete(self, model):
         Event_Cache.delete(model)
         self._isinstance(model)
@@ -39,7 +40,7 @@ class Event_Service(Service):
                                                   Event_Cache.date <= end_of_day).order_by(Event_Cache.date).all()
         entries = [entry.event for entry in cached_entries]
         return entries
-        
+
     def _preprocess_params(self, kwargs):
         kwargs.pop('csrf_token', None)
         if not current_user.is_admin():
@@ -125,11 +126,11 @@ class Event_Service(Service):
         if data.weekly_days.data:
             kwargs.update( {'bymonthday': [int(x) for x in data.monthly_days.data]})
         return rrule(MONTHLY, **kwargs)
-        
+
     def _isallowed(self, model):
         if current_user != model.owner or current_user.is_admin():
             raise Unauthorized()
-            
+
     def update(self, model, **kwargs):
         print(("Update:", kwargs))
         self._isinstance(model)
