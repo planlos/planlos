@@ -8,10 +8,11 @@
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('MainCtrl', function ($http, $scope) {
+    var respPromise = $http.get('http://localhost:5000/api/events/');
+
+	respPromise.success((function(data, status, headers, config){
+		$scope.events = data.events;
+		console.log(data);
+	}));
   });

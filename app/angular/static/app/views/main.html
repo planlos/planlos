@@ -4,9 +4,7 @@
     Deine nächsten Termine:
   </p>
   <ul>
-    <li>Termin 1&nbsp;<a ng-href="#"><i class="fi-pencil"></i></a></li>
-    <li>Termin 2&nbsp;<a ng-href="#"><i class="fi-pencil"></i></a></li>
-    <li>Termin 3&nbsp;<a ng-href="#"><i class="fi-pencil"></i></a></li>
+    <li ng-repeat="event in events">{{event.title}}&nbsp;<a ng-href="#/event/{{event.id}}"><i class="fi-pencil"></i></a></li>
   </ul>
   <a href="#/event" class="button round">Neuen Termin anlegen</a>
 </div>

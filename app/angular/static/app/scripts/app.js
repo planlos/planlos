@@ -58,6 +58,10 @@ angular
         templateUrl: 'views/event.html',
         controller: 'EventCtrl'
       })
+      .when('/event/:id', {
+        templateUrl: 'views/event.html',
+        controller: 'EventCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

@@ -1,26 +1,55 @@
 <h1>Planlos Bremen - Termin anlegen/bearbeiten</h1>
-<div class="small-1 columns">
-	<label for="right-label" class="right"><h3>Datum</h3></label>
+
+<!-- DATE -->
+<div class="row">
+	<div class="small-2 columns">
+		<label for="right-label" class="right"><h3>Datum</h3></label>
+	</div>
+	<div class="small-10 columns">
+		<input type="text" ui-date="dateOptions" ng-model="event.dtstart" placeholder="Datum">
+	</div>
 </div>
-<div class="small-11 columns">
-	<input type="text" ui-date="dateOptions" ng-model="EventCtrl" placeholder="Datum">
+
+<!-- TIME -->
+<div class="row">
+	<div class="small-2 columns">
+		<label for="right-label" class="right"><h3>Uhrzeit</h3></label>
+	</div>
+	<div class="small-1 columns">
+		<select>
+			<option ng-repeat="n in [] | range:24">{{n}}</option>
+		</select>
+	</div>
+	<div class="small-1 columns">
+		<select>
+			<option>00</option>
+			<option>15</option>
+			<option>30</option>
+			<option>45</option>
+		</select>
+	</div>
+	<div class="small-1 columns end">
+		<label><h3>Uhr</h3></label>
+	</div>
 </div>
-<div class="small-1 columns">
-	<label for="right-label" class="right"><h3>Uhrzeit</h3></label>
+
+<!-- TITLE -->
+<div class="row">
+	<div class="small-2 columns">
+		<label for="right-label" class="right"><h3>Titel</h3></label>
+	</div>
+	<div class="small-10 columns">
+		<input type="text" ng-model="event.title" placeholder="Titel">
+	</div>
 </div>
-<div class="small-1 columns">
-	<select>
-		<option ng-repeat="n in [] | range:24">{{n}}</option>
-	</select>
+
+<!-- DESCRIPTION -->
+<div class="row">
+	<div class="small-2 columns">
+		<label for="right-label" class="right"><h3>Beschreibung</h3></label>
+	</div>
+	<div class="small-10 columns">
+		<textarea rows="10" ng-model="event.desc"></textarea>
+	</div>
 </div>
-<div class="small-1 columns">
-	<select>
-		<option>00</option>
-		<option>15</option>
-		<option>30</option>
-		<option>45</option>
-	</select>
-</div>
-<div class="small-1 columns end">
-	<label><h3>Uhr</h3></label>
-</div>
+
