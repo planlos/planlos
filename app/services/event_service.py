@@ -43,10 +43,12 @@ class Event_Service(Service):
 
     def _preprocess_params(self, kwargs):
         kwargs.pop('csrf_token', None)
-        if not current_user.is_admin():
-            if kwargs.get('is_pub'):
-                kwargs.pop('is_pub', None)
-            kwargs.pop('likes', None)
+        #if not current_user.is_admin():
+        #
+        if kwargs.get('is_pub'):
+            kwargs.pop('is_pub', None)
+        kwargs.pop('likes', None)
+        #
         if 'dtstart_date' in kwargs and 'dtstart_time' in kwargs:
             dtstart = datetime.combine(kwargs['dtstart_date'], kwargs['dtstart_time'])
             kwargs['dtstart'] = dtstart
@@ -128,8 +130,9 @@ class Event_Service(Service):
         return rrule(MONTHLY, **kwargs)
 
     def _isallowed(self, model):
-        if current_user != model.owner or current_user.is_admin():
-            raise Unauthorized()
+        #if current_user != model.owner or current_user.is_admin():
+        #    raise Unauthorized()
+        pass
 
     def update(self, model, **kwargs):
         print(("Update:", kwargs))

@@ -23,10 +23,12 @@ class Event_Cache(db.Model):
         if event.rrule:
             for event_date in list(event.rrule):
                 ec = Event_Cache(event_date, event)
-                ec.commit()
+                db.session.add(ec)
+                db.session.commit()
         else:
             ec = Event_Cache(event.dtstart, event)
-            ec.commit()
+            db.session.add(ec)
+            db.session.commit()
         print("Cache updated")
 
     @classmethod

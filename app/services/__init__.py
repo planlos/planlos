@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from app import user_datastore
-
+from app import db
 
 class Service(object):
     __model__ = None
 
-    def set_db_session(self, session):
-        self.session = session
+    def __init__(self):
+        self.session = db.session
+
+    def set_db_session(self, session = None):
+        if session is not None:
+            self.session = session
+        else:
+            self.session = db.session
 
     def _isinstance(self, model, raise_error=True):
         rv = isinstance(model, self.__model__)

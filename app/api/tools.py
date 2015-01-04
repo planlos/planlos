@@ -27,6 +27,8 @@ from datetime import datetime
 import dateutil
 
 
+from .. import db
+
 action_types = [
 '', # there is no primary key with 0
 'Konzert', #1
@@ -80,12 +82,11 @@ class Tools_Api(restful.Resource):
         args = reqargs.parse_args()
         try:
             if str(args['cmd']) in self.cmdmap:
-                self.cmdmap[ args['cmd'] ]()
+                self.cmdmap[args['cmd']]()
                 return {'msg': 'ok'}, 200
                 return {'status': 'command not found'}, 404
         except Exception as e:
             return {'error': e} , 500
-
 
     def _import_data(self):
         self._delete_all()
@@ -122,7 +123,8 @@ class Tools_Api(restful.Resource):
             t = Tag.query.filter(Tag.name==tag_name).first()
             if not t:
                 t = Tag(tag_name)
-                t.commit()
+                db.session.add(t)
+                db.session.commit()
             e.tags = [t]
             eventservice.update(e)
             msg += 'Event: %s added' % e.title
