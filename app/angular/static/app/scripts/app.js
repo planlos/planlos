@@ -17,7 +17,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ui.date'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -25,9 +26,9 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/dates', {
-        templateUrl: 'views/dates.html',
-        controller: 'DatesCtrl'
+      .when('/events', {
+        templateUrl: 'views/events.html',
+        controller: 'EventsCtrl'
       })
       .when('/places', {
         templateUrl: 'views/places.html',
@@ -52,6 +53,10 @@ angular
       .when('/users', {
         templateUrl: 'views/users.html',
         controller: 'UsersCtrl'
+      })
+      .when('/event', {
+        templateUrl: 'views/event.html',
+        controller: 'EventCtrl'
       })
       .otherwise({
         redirectTo: '/'

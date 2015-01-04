@@ -1,0 +1,26 @@
+<h1>Planlos Bremen - Termin anlegen/bearbeiten</h1>
+<div class="small-1 columns">
+	<label for="right-label" class="right"><h3>Datum</h3></label>
+</div>
+<div class="small-11 columns">
+	<input type="text" ui-date="dateOptions" ng-model="EventCtrl" placeholder="Datum">
+</div>
+<div class="small-1 columns">
+	<label for="right-label" class="right"><h3>Uhrzeit</h3></label>
+</div>
+<div class="small-1 columns">
+	<select>
+		<option ng-repeat="n in [] | range:24">{{n}}</option>
+	</select>
+</div>
+<div class="small-1 columns">
+	<select>
+		<option>00</option>
+		<option>15</option>
+		<option>30</option>
+		<option>45</option>
+	</select>
+</div>
+<div class="small-1 columns end">
+	<label><h3>Uhr</h3></label>
+</div>
