@@ -8,10 +8,12 @@
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('ToolsCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('ToolsCtrl', function ($http, $routeParams, $scope) {
+    var cmd = $routeParams['cmd'];
+    if(cmd){
+    	var respPromise = $http.post('http://localhost:5000/api/tools', {'cmd' : cmd});
+    	respPromise.success(function(data){
+    		console.log(data);
+    	});
+    }
   });

@@ -42,6 +42,10 @@ angular
         templateUrl: 'views/tools.html',
         controller: 'ToolsCtrl'
       })
+      .when('/tools/:cmd', {
+        templateUrl: 'views/tools.html',
+        controller: 'ToolsCtrl'
+      })
       .when('/account', {
         templateUrl: 'views/account.html',
         controller: 'AccountCtrl'
@@ -61,6 +65,14 @@ angular
       .when('/event/:id', {
         templateUrl: 'views/event.html',
         controller: 'EventCtrl'
+      })
+      .when('/place', {
+        templateUrl: 'views/place.html',
+        controller: 'PlaceCtrl'
+      })
+      .when('/place/:id', {
+        templateUrl: 'views/place.html',
+        controller: 'PlaceCtrl'
       })
       .otherwise({
         redirectTo: '/'
