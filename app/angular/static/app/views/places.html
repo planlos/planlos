@@ -3,10 +3,8 @@
   <p class="lead">
     Die Liste der Veranstaltungsorte:
   </p>
-  <ul>
-    <li>Ort 1&nbsp;<a ng-href="#"><i class="fi-pencil"></i></a></li>
-    <li>Ort 2&nbsp;<a ng-href="#"><i class="fi-pencil"></i></a></li>
-    <li>Ort 3&nbsp;<a ng-href="#"><i class="fi-pencil"></i></a></li>
+  <ul >
+    <li ng-repeat="place in places">{{place.name}}, {{place.addr}}&nbsp;<a ng-href="#/place/{{place.id}"><i class="fi-pencil"></i></a></li>
   </ul>
   <a href="#" class="button round">Neuen Ort anlegen</a>
 </div>

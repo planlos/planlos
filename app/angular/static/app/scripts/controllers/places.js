@@ -8,10 +8,11 @@
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('PlacesCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('PlacesCtrl', function ($scope, $http) {
+  		var respPromise = $http.get('http://localhost:5000/api/locations/');
+
+  		respPromise.success((function(data, status, headers, config){
+  			$scope.places = data.locations;
+  			console.log(data);
+  		}));
   });
