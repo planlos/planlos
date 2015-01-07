@@ -85,9 +85,7 @@ class Event_Service(Service):
         return events
 
     def get_unpublished(self):
-        return self.__model__.query.filter(Event.is_pub==False).all() #order_by(Event.dtstart)
-
-
+        return self.__model__.query.filter(Event.is_pub==False).all()  # order_by(Event.dtstart)
 
     def get_or_404(self, id):
         entry = super(Event_Service, self).get_or_404(id)
@@ -95,51 +93,16 @@ class Event_Service(Service):
             abort(404)
         return entry
 
-
-    def _create_rrule_daily(self, data):
-        dtstart = datetime.combine(data.dtstart_date.data, data.dtstart_time.data)
-        if data.until.data and data.until.data != '':
-            return rrule(DAILY,dtstart=dtstart, until=data.until.data)
-        else:
-            return rrule(DAILY,dtstart=dtstart, count=data.repeat.data)
-
-    def _create_rrule_weekly(self, data):
-        dtstart = datetime.combine(data.dtstart_date.data, data.dtstart_time.data)
-        kwargs={
-            'dtstart': dtstart
-            }
-        if data.until.data:
-            kwargs.update({ 'until': data.until.data})
-        if data.repeat.data:
-            kwargs.update({'count': data.repeat.data})
-        if data.weekly_days.data:
-            kwargs.update( {'byweekday': [ int(x) for x in data.weekly_days.data]})
-        return rrule(WEEKLY, **kwargs)
-
-    def _create_rrule_monthly(self, data):
-        dtstart = datetime.combine(data.dtstart_date.data, data.dtstart_time.data)
-        kwargs={
-            'dtstart': dtstart
-            }
-        if data.until.data:
-            kwargs.update({ 'until': data.until.data})
-        if data.repeat.data:
-            kwargs.update({'count': data.repeat.data})
-        if data.weekly_days.data:
-            kwargs.update( {'bymonthday': [int(x) for x in data.monthly_days.data]})
-        return rrule(MONTHLY, **kwargs)
-
     def _isallowed(self, model):
-        #if current_user != model.owner or current_user.is_admin():
+        # if current_user != model.owner or current_user.is_admin():
         #    raise Unauthorized()
         pass
 
     def update(self, model, **kwargs):
         print(("Update:", kwargs))
         self._isinstance(model)
-        #self._isallowed(model)
+        # self._isallowed(model)
         for k, v in list(self._preprocess_params(kwargs).items()):
             setattr(model, k, v)
         model = self.save(model)
         return model
-

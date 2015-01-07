@@ -85,6 +85,11 @@ class Event_Api(restful.Resource):
     def post(self, id):
         return self.patch(id)
 
+    def options (self):
+        return {'Allow' : 'PUT' }, 200, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods' : 'PUT,GET' }
+
+
+    
     @marshal_with(event_fields)
     def patch(self, id):
         e = event_service.get_or_404(id)

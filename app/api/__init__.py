@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from flask import render_template, abort, jsonify
+from flask import jsonify
 from flask.ext import restful
 from flask.ext.restful.utils import cors
 from .. import factory
@@ -18,7 +18,7 @@ def create_app(settings_override=None):
     # Set the default JSON encoder
 
     # restapi.init_app(app)
-    restapi = restful.Api(app, decorators=[cors.crossdomain(origin='*')])
+    restapi = restful.Api(app, decorators=[cors.crossdomain(origin='*', methods='*')])
     restapi.add_resource(Tags_Api, '/tags/', endpoint='tags')
     restapi.add_resource(Flyer_List_Api, '/flyers/', endpoint='flyers')
     restapi.add_resource(Flyer_Api, '/flyers/<int:id>', endpoint='flyer')
