@@ -18,6 +18,20 @@ class Test_Event_Api(PlanlosApiTest):
         # create_some_events
         # factory_boy
 
+    def _create_event(self):
+        
+
+        
     def test_eventlist(self):
         r = self.client.get("/events/", follow_redirects=True)
         self.assert_200(r)
+
+    def test_post_event(self):
+        data = dict(name="Jesse")
+        response = self.client.post('/events/', data=data,
+                                    content_type='application/json')
+        self.assert_200(response)
+
+    def test_event_by_date(self):
+        response = self.client.get('/events/1')
+        self.assert_200(response)

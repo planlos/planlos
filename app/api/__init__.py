@@ -18,7 +18,8 @@ def create_app(settings_override=None):
     # Set the default JSON encoder
 
     # restapi.init_app(app)
-    restapi = restful.Api(app, decorators=[cors.crossdomain(origin='*', methods='*')])
+    restapi = restful.Api(app, decorators=[cors.crossdomain(origin='*', methods='*',
+                                                            headers='Origin, X-Requested-With, Content-Type, Accept, Options')])
     restapi.add_resource(Tags_Api, '/tags/', endpoint='tags')
     restapi.add_resource(Flyer_List_Api, '/flyers/', endpoint='flyers')
     restapi.add_resource(Flyer_Api, '/flyers/<int:id>', endpoint='flyer')
@@ -39,6 +40,12 @@ def create_app(settings_override=None):
 #    @app.route('/')
 #    def index():
 #        return jsonify(dict(status=200)), 200
+
+    @app.after_request
+    def after(response):
+        print(response.headers)
+        return response
+
 
     print((app.url_map))
     # app.config['JSON_AS_ASCII'] = False

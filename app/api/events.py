@@ -4,7 +4,7 @@ from ..services import events as event_service
 from ..services import users
 from ..services import locations as locations
 
-from flask import current_app
+from flask import current_app, request
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with
 from ..services.user_service import No_Such_User
@@ -61,7 +61,10 @@ class Event_List_Api(restful.Resource):
         e = event_service.create(**args)
         return {'event': e} , 200
 
+    def options(self):
+        pass
 
+    
 class Event_Api(restful.Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -69,13 +72,9 @@ class Event_Api(restful.Resource):
         self.reqparse.add_argument('subtitle', type = str)
         self.reqparse.add_argument('desc', type = str)
         self.reqparse.add_argument('is_pub', type = bool)
-        self.reqparse.add_argument('likes', type = int)
-        self.reqparse.add_argument('location_id', type = int)
-        self.reqparse.add_argument('tags', type = list)
-        self.reqparse.add_argument('flyers', type = list)
         self.reqparse.add_argument('dtstart', type = parseddate)
         self.reqparse.add_argument('dtend', type = parseddate)
-        self.reqparse.add_argument('rrule', type = str)
+
         super(Event_Api, self).__init__()
 
     @marshal_with(event_fields)
@@ -83,19 +82,22 @@ class Event_Api(restful.Resource):
         return event_service.get_or_404(id)
 
     def post(self, id):
+        print("DEBUG: post")
         return self.patch(id)
 
-    def options (self):
-        return {'Allow' : 'PUT' }, 200, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods' : 'PUT,GET' }
+    def options(self):
+        pass
 
-
-    
     @marshal_with(event_fields)
     def patch(self, id):
+        print("DEBUG: patch")
         e = event_service.get_or_404(id)
-        args = self.reqparse.parse_args()
+        print("DEBUG: patch1")
+        args = self.reqparse.parse_args(request)
+        print("DEBUG: patch2")
         args = { k:v for k,v in list(args.items()) if v is not None}
         e = event_service.update(e, **args)
+        print("DEBUG: patch3")
         return {'event': e} , 201
 
     def delete(self, id):

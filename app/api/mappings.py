@@ -63,7 +63,8 @@ event_fields = {
     'title':   fields.String,
     'subtitle':    fields.String,
     'desc': fields.String,
-    'tags': fields.List(TagItem()),
+    #'tags': fields.List(TagItem()),
+    'tags': fields.String,
     'dtstart': fields.DateTime(default=None),
     'location': fields.Nested(location_fields),
     'dtend': fields.DateTime(default=None),
@@ -76,5 +77,7 @@ event_list = {
 
 ## parse with dateutil
 def parseddate(date):
-    return dateutil.parser.parse(date)
-    
+    if date is None:
+        return date
+    else:
+        return dateutil.parser.parse(date)

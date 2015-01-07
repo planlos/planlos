@@ -48,6 +48,10 @@ class Event_Service(Service):
         if kwargs.get('is_pub'):
             kwargs.pop('is_pub', None)
         kwargs.pop('likes', None)
+        if kwargs.get('location'):
+            print("lOCATION", kwargs['location'])
+            kwargs['location_id'] = kwargs['location']['id']
+        kwargs.pop('location', None)
         #
         if 'dtstart_date' in kwargs and 'dtstart_time' in kwargs:
             dtstart = datetime.combine(kwargs['dtstart_date'], kwargs['dtstart_time'])

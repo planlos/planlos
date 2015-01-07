@@ -10,10 +10,11 @@ from app import angular
 from app import db
 
 frontend = frontend.create_app(settings_override="app.config.Development")
+angular = angular.create_app(settings_override="app.config.Development")
 
 application = DispatcherMiddleware(frontend, {
     '/api': api.create_app(settings_override="app.config.Development"),
-    '/app': angular.create_app(settings_override="app.config.Development")
+    '/app': angular,
 })
 
 if __name__ == "__main__":

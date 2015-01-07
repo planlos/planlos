@@ -55,6 +55,8 @@ class Development(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(_basedir, 'planlos_dev.db')
     SITEURL = 'http://localhost:5000'
+    CSRF_ENABLED = False
+    WTF_CSRF_ENABLED = False
 
 
 class Testing(Config):
