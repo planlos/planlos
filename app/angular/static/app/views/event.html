@@ -43,6 +43,40 @@
 	</div>
 </div>
 
+<!-- SUBTITLE -->
+<div class="row">
+	<div class="small-2 columns">
+		<label for="right-label" class="right"><h3>Untertitel</h3></label>
+	</div>
+	<div class="small-10 columns">
+		<input type="text" ng-model="event.subtitle" placeholder="Untertitel">
+	</div>
+</div>
+
+<!-- PLACE -->
+<div class="row">
+	<div class="small-2 columns">
+		<label for="right-label" class="right"><h3>Ort</h3></label>
+	</div>
+	<div class="small-10 columns">
+		<select ng-model="event.location">
+			<option ng-repeat="loc in locations" value="{{loc}}" ng-selected="loc.id === event.location.id">
+				{{loc.name}}
+			</option>
+		</select>
+	</div>
+</div>
+
+<!-- TITLE -->
+<div class="row">
+	<div class="small-2 columns">
+		<label for="right-label" class="right"><h3>Tags</h3></label>
+	</div>
+	<div class="small-10 columns">
+		<input type="text" ng-model="event.tags" placeholder="Tags">
+	</div>
+</div>
+
 <!-- DESCRIPTION -->
 <div class="row">
 	<div class="small-2 columns">
@@ -52,4 +86,12 @@
 		<textarea rows="10" ng-model="event.desc"></textarea>
 	</div>
 </div>
+
+<!-- SAVE BUTTON -->
+<div class="row">
+	<div class="small-offset-2 small-10 columns">
+		<a ng-click="saveEvent()" class="button round">Speichern</a>
+	</div>
+</div>
+
 
