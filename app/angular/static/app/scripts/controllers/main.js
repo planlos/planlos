@@ -8,7 +8,7 @@
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('MainCtrl', function ($http, $scope) {
+  .controller('MainCtrl', function ($http, $scope, apiUrl) {
     var respPromise = $http.get('http://'+apiUrl+'/api/events/');
 
 	respPromise.success((function(data, status, headers, config){

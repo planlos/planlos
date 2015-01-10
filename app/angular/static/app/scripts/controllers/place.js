@@ -8,7 +8,7 @@
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('PlaceCtrl', function ($http, $routeParams, $scope) {
+  .controller('PlaceCtrl', function ($http, $routeParams, $scope, apiUrl) {
     var placeId = $routeParams['id'];
 
   	if(placeId){

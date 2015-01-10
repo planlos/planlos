@@ -8,7 +8,7 @@
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('PlacesCtrl', function ($scope, $http) {
+  .controller('PlacesCtrl', function ($scope, $http, apiUrl) {
   		var respPromise = $http.get('http://'+apiUrl+'/api/locations/');
 
   		respPromise.success((function(data, status, headers, config){

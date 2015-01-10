@@ -8,7 +8,7 @@
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('ToolsCtrl', function ($http, $routeParams, $scope) {
+  .controller('ToolsCtrl', function ($http, $routeParams, $scope, apiUrl) {
     var cmd = $routeParams['cmd'];
     if(cmd){
     	var respPromise = $http.post('http://'+apiUrl+'/api/tools', {'cmd' : cmd});
