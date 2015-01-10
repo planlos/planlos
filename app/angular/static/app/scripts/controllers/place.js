@@ -13,7 +13,7 @@ angular.module('staticApp')
 
   	if(placeId){
   		//update event
-  		var respPromise = $http.get('http://localhost:5000/api/locations/' + placeId);
+  		var respPromise = $http.get('http://'+apiUrl+'/api/locations/' + placeId);
   		respPromise.success((function(data, status, headers, config){
 		$scope.place = data.location;
 			console.log(data);

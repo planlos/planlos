@@ -9,7 +9,7 @@
  */
 angular.module('staticApp')
   .controller('PlacesCtrl', function ($scope, $http) {
-  		var respPromise = $http.get('http://localhost:5000/api/locations/');
+  		var respPromise = $http.get('http://'+apiUrl+'/api/locations/');
 
   		respPromise.success((function(data, status, headers, config){
   			$scope.places = data.locations;

@@ -8,7 +8,7 @@
  * Controller of the staticApp
  */
 angular.module('staticApp')
-  .controller('EventCtrl', function ($q, $http, $routeParams, $scope) {
+  .controller('EventCtrl', function ($q, $http, $routeParams, $scope, apiUrl) {
   	var eventId = $routeParams['id'];
 
   	var EVENT = 'event';
@@ -21,8 +21,8 @@ angular.module('staticApp')
 
   	if(eventId){
   		//update event
-  		var eventsPromise = $http.get('http://192.168.1.41:5000/api/events/' + eventId, {key: EVENT});
-  		var locationsPromise = $http.get('http://192.168.1.41:5000/api/locations/', {key: LOCATIONS});
+  		var eventsPromise = $http.get('http://'+apiUrl+'/api/events/' + eventId, {key: EVENT});
+  		var locationsPromise = $http.get('http://'+apiUrl+'/api/locations/', {key: LOCATIONS});
 
   		/*$q.all([eventsPromise, locationsPromise]).then(function(result){
   			var tmp = [];
@@ -44,12 +44,12 @@ angular.module('staticApp')
   	}
   	else{
 	  	$scope.event = {};
-	  	var locationsPromise = $http.get('http://192.168.1.41:5000/api/locations/');
+	  	var locationsPromise = $http.get('http://'+apiUrl+'/api/locations/');
 	  	//create new event
   	}
 
   	$scope.saveEvent = function(){
-  		var eventsPromise = $http.post('http://192.168.1.41:5000/api/events/' + $scope.event.id, $scope.event);
+  		var eventsPromise = $http.post('http://'+apiUrl+'/api/events/' + $scope.event.id, $scope.event);
   		eventsPromise.success(
   			function(data, status, headers, config){
 		      console.log(data);

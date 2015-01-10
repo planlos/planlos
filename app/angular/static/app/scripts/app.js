@@ -20,6 +20,7 @@ angular
     'ngTouch',
     'ui.date'
   ])
+  .constant('apiUrl', 'localhost:5000')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

@@ -9,7 +9,7 @@
  */
 angular.module('staticApp')
   .controller('MainCtrl', function ($http, $scope) {
-    var respPromise = $http.get('http://localhost:5000/api/events/');
+    var respPromise = $http.get('http://'+apiUrl+'/api/events/');
 
 	respPromise.success((function(data, status, headers, config){
 		$scope.events = data.events;
