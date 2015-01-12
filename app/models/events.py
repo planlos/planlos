@@ -17,6 +17,9 @@ class Event_Cache(db.Model):
         self.date = date
         self.event = event
 
+    def __repr__(self):
+        return "{eventid} => {date}".format(eventid=self.event.id, date=self.date.ctime())
+
     @classmethod
     def update(cls, event):
         Event_Cache.delete(event)

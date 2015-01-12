@@ -1,7 +1,7 @@
 from . import PlanlosApiTest
 from app.models import User, Role
 from app.models.location import Location
-from app.models.location import Photo
+# from app.models.location import Photo
 from app import db
 import json
 
@@ -15,8 +15,8 @@ class Location_Factory(factory.alchemy.SQLAlchemyModelFactory):
         model = Location
         sqlalchemy_session = db.session
 
-    #id = 1 ## _sequence als kwarg
-    name = factory.fuzzy.FuzzyText(length=20,prefix="Location_")
+    # id = 1 ## _sequence als kwarg
+    name = factory.fuzzy.FuzzyText(length=20, prefix="Location_")
     shortdesc = "This ist noob"
 
 
