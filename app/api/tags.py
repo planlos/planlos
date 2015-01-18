@@ -9,12 +9,13 @@ from flask.ext.restful import fields, marshal_with
 from flask.ext.restful import reqparse
 
 from .mappings import *
+from .resources import Api_Resource
 
 from datetime import datetime
 import dateutil
 
 
-class Tags_Api(restful.Resource):
+class Tags_Api(Api_Resource):
     def __init__(self):
         super(Tags_Api, self).__init__()
 

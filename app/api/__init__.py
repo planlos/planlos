@@ -4,7 +4,7 @@ from flask import jsonify
 from flask.ext import restful
 from flask.ext.restful.utils import cors
 from .. import factory
-from .events import Event_List_Api, Event_Api
+from .events import Event_List_Api, Event_Api, Events_by_Day, Events_by_Month
 from .users import User_List_Api
 from .users import Auth_Api
 from .tools import Tools_Api
@@ -23,10 +23,10 @@ def create_app(settings_override=None):
     restapi.add_resource(Tags_Api, '/tags/', endpoint='tags')
     restapi.add_resource(Flyer_List_Api, '/flyers/', endpoint='flyers')
     restapi.add_resource(Flyer_Api, '/flyers/<int:id>', endpoint='flyer')
+    restapi.add_resource(Events_by_Day, '/events/<int:year>/<int:month>/<int:day>')
+    restapi.add_resource(Events_by_Month, '/events/<int:year>/<int:month>')
+    restapi.add_resource(Event_Api, '/event/<int:id>')
     restapi.add_resource(Event_List_Api, '/events/', endpoint='events')
-    restapi.add_resource(Event_Api, '/events/<int:year>/<int:month>/<int:day>', endpoint='eventday')
-    restapi.add_resource(Event_Api, '/events/<int:year>/<int:month>', endpoint='eventmonth')
-    restapi.add_resource(Event_Api, '/events/<int:id>', endpoint='event')
     restapi.add_resource(User_List_Api, '/users/', endpoint='users')
     restapi.add_resource(Auth_Api, '/auth/', endpoint='auth')
     restapi.add_resource(Location_List_Api, '/locations/', endpoint='locations')

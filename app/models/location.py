@@ -51,6 +51,7 @@ class Location(db.Model):
     postal_code = db.Column(db.Unicode())
     country_name = db.Column(db.Unicode())
     email_contact = db.Column(db.Unicode())
+    openinghours = db.Column(db.Unicode())
     tel = db.Column(db.Unicode())
     fax = db.Column(db.Unicode())
     url = db.Column(db.Unicode())

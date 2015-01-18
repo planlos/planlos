@@ -21,6 +21,7 @@ import datetime
 from dateutil.parser import *
 
 from .mappings import *
+from .resources import Api_Resource
 
 
 from datetime import datetime
@@ -56,7 +57,7 @@ action_types = [
 ]
 
 
-class Tools_Api(restful.Resource):
+class Tools_Api(Api_Resource):
     def __init__(self):
         self.cmdmap = {}
         self.cmdmap.update( {'import_data': getattr(self, '_import_data') } )
@@ -75,7 +76,6 @@ class Tools_Api(restful.Resource):
                 return {'events': marshal(e, event_fields)}, 200
         return { 'msg': 'Please help me!'}
 
- 
     def post(self):
         reqargs = reqparse.RequestParser()
         reqargs.add_argument('cmd', type = str, required=True)
@@ -116,7 +116,7 @@ class Tools_Api(restful.Resource):
                 l.name = location_name
                 l.desc = lf['selfportrait'].encode('latin1').decode('utf-8', 'ignore')
                 l.url = lf['url']
-                l.addr = lf['address'].encode('latin1').decode('utf-8', 'ignore')
+                l.street_address = lf['address'].encode('latin1').decode('utf-8', 'ignore')
                 locations.update(l)
             e.location = l
             tag_name = action_types[int(fields['type'])].lower()
