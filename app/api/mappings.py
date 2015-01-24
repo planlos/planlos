@@ -83,11 +83,6 @@ event_fields = {
     # 'owner': fields.Nested(user_resource),
 }
 
-event_list = {
-    'events': fields.Nested(event_fields)
-}
-
-
 # parse with dateutil
 def parseddate(date):
     if date is None:

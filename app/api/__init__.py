@@ -2,7 +2,6 @@
 
 from flask import jsonify
 from flask.ext import restful
-from flask.ext.restful.utils import cors
 from .. import factory
 from .events import Event_List_Api, Event_Api, Events_by_Day, Events_by_Month
 from .users import User_List_Api
@@ -12,14 +11,19 @@ from .flyers import Flyer_Api, Flyer_List_Api
 from .locations import Location_List_Api, Location_Api
 from .tags import Tags_Api
 
+from .core import marshmallow
+#from .core import cors
+
+from flask.ext.restful.utils import cors
 
 def create_app(settings_override=None):
     app = factory.create_app(__name__, '/api', settings_override)
     # Set the default JSON encoder
 
     # restapi.init_app(app)
-    restapi = restful.Api(app, decorators=[cors.crossdomain(origin='*', methods='*',
-                                                            headers='Origin, X-Requested-With, Content-Type, Accept, Options')])
+    restapi = restful.Api(app,
+                          decorators=[cors.crossdomain(origin='*', methods='*',
+                                                       headers='Origin, X-Requested-With, Content-Type, Accept, Options')])
     restapi.add_resource(Tags_Api, '/tags/', endpoint='tags')
     restapi.add_resource(Flyer_List_Api, '/flyers/', endpoint='flyers')
     restapi.add_resource(Flyer_Api, '/flyers/<int:id>', endpoint='flyer')
@@ -37,10 +41,8 @@ def create_app(settings_override=None):
     app.errorhandler(403)(forbidden)
     app.errorhandler(401)(unauthorized)
 
-#    @app.route('/')
-#    def index():
-#        return jsonify(dict(status=200)), 200
-
+    #cors.init_app(app)
+    marshmallow.init_app(app)
     @app.after_request
     def after(response):
         print(response.headers)

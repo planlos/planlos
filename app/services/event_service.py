@@ -8,6 +8,9 @@ from werkzeug.exceptions import Unauthorized
 from flask.ext.security.core import current_user
 from app import db
 
+
+from dateutil import parser
+
 class Event_Service(Service):
     __model__ = Event
 
@@ -43,21 +46,20 @@ class Event_Service(Service):
 
     def _preprocess_params(self, kwargs):
         kwargs.pop('csrf_token', None)
-        #if not current_user.is_admin():
-        #
         if kwargs.get('is_pub'):
             kwargs.pop('is_pub', None)
         kwargs.pop('likes', None)
+        kwargs.pop('modified_at')
         if kwargs.get('location'):
             print("lOCATION", kwargs['location'])
             kwargs['location_id'] = kwargs['location']['id']
         kwargs.pop('location', None)
         #
-        if 'dtstart_date' in kwargs and 'dtstart_time' in kwargs:
-            dtstart = datetime.combine(kwargs['dtstart_date'], kwargs['dtstart_time'])
-            kwargs['dtstart'] = dtstart
-            del kwargs['dtstart_date']
-            del kwargs['dtstart_time']
+        if type(kwargs['dtstart']) is str:
+            kwargs['dtstart'] = parser.parse(kwargs['dtstart'])
+        if kwargs.get('dtend') and type(kwargs['dtend']) is str:
+            kwargs['dtend'] = parser.parse(kwargs['dtend'])
+
         return kwargs
 
     def get_by_date(self, day, end=None):

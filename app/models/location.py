@@ -69,6 +69,3 @@ class Location(db.Model):
         self.created_at = datetime.now()
         self.modified_at = datetime.now()
         super(Location, self).__init__(**kwargs)
-
-    def __unicode__(self):
-        return self.name
