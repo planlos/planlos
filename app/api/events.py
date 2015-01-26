@@ -1,39 +1,17 @@
 # coding: utf-8
 
-from ..services import events as event_service
 from flask import request
-from flask.ext.restful import marshal_with
+
+from ..services import events as event_service
+from .resources import Api_Resource
+from .core import marshmallow
 from datetime import datetime
 from datetime import timedelta
-from flask.ext.restful import reqparse
-from .mappings import *
-from .resources import Api_Resource
 from dateutil.parser import parse
-from .parsers import *
-from .core import marshmallow
-from marshmallow import fields
+
 import json
+from .schemas import Event_Schema
 
-class Event_Schema(marshmallow.Schema):
-    title = fields.String(required=True)
-    id = fields.Integer()
-
-    class Meta:
-        skip_missing = True
-        # exclude = ['modified_at']
-        fields = ('id',
-                  'title',
-                  'subtitle',
-                  'desc',
-                  'modified_at',
-                  'likes',
-                  #'location',
-                  #'tags',
-                  'dtstart',
-                  'dtend',
-                  'rrule',
-                  #'owner',
-                  )
 
 class Events_by_Day(Api_Resource):
     def get(self, year, month, day):
@@ -72,8 +50,8 @@ class Event_List_Api(Api_Resource):
         if errors:
             return self.prep_json(errors, status='fail')
         e = event_service.create(**data)
-        result = self.schema.dump(e)
-        return self.prep_json(result.data)
+        result = Event_Schema().dump(e)
+        return self.prep_json({'events': result.data})
 
 
 

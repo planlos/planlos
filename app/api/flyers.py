@@ -22,7 +22,6 @@ import sys
 import datetime
 from dateutil.parser import *
 
-from .mappings import *
 from .resources import Api_Resource
 
 from datetime import datetime
@@ -36,16 +35,7 @@ class Flyer_List_Api(Api_Resource):
         return {'msg': 'Please help me!'}
 
     def post(self):
-        reqargs = reqparse.RequestParser()
-        reqargs.add_argument('cmd', type=str, required=True)
-        args = reqargs.parse_args()
-        try:
-            if str(args['cmd']) in self.cmdmap:
-                self.cmdmap[args['cmd']]()
-                return {'msg': 'ok'}, 200
-                return {'status': 'command not found'}, 404
-        except Exception as e:
-            return {'error': e}, 500
+        pass
 
 
 class Flyer_Api(Api_Resource):

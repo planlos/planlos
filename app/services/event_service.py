@@ -49,7 +49,7 @@ class Event_Service(Service):
         if kwargs.get('is_pub'):
             kwargs.pop('is_pub', None)
         kwargs.pop('likes', None)
-        kwargs.pop('modified_at')
+        kwargs.pop('modified_at', None)
         if kwargs.get('location'):
             print("lOCATION", kwargs['location'])
             kwargs['location_id'] = kwargs['location']['id']

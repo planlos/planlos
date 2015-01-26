@@ -30,7 +30,7 @@ def create_app(settings_override=None):
     restapi.add_resource(Events_by_Day, '/events/<int:year>/<int:month>/<int:day>')
     restapi.add_resource(Events_by_Month, '/events/<int:year>/<int:month>')
     restapi.add_resource(Event_Api, '/event/<int:id>')
-    restapi.add_resource(Event_List_Api, '/events/', endpoint='events')
+    restapi.add_resource(Event_List_Api, '/events/')
     restapi.add_resource(User_List_Api, '/users/', endpoint='users')
     restapi.add_resource(Auth_Api, '/auth/', endpoint='auth')
     restapi.add_resource(Location_List_Api, '/locations/', endpoint='locations')

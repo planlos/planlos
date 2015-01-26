@@ -3,40 +3,12 @@
 from flask import jsonify, request, redirect, url_for
 from ..services import locations
 from .resources import Api_Resource
-from .core import marshmallow
-from marshmallow import fields
+from .schemas import Location_Schema
 #from .core import log
 import logging as log
 import json
 
-class Location_Schema(marshmallow.Schema):
-    name = fields.String(required=True)
-    email_contact = fields.Email()
-    id = fields.Integer()
-    postal_code = fields.Number()
-    url = fields.Url()
-    # modified_at = fields.LocalDateTime()
-
-    class Meta:
-        skip_missing = True
-        # exclude = ['modified_at']
-        fields = ('name',
-                  'shortdesc',
-                  'street_address',
-                  'locality',
-                  'region',
-                  'postal_code',
-                  'country_name',
-                  'email_contact',
-                  'openinghours',
-                  'tel',
-                  'fax',
-                  'url',
-                  'tags',
-                  'longitude',
-                  'latitude',
-                  'modified_at',
-                  'id')
+from flask.ext.restful import reqparse
 
 
 class Location_List_Api(Api_Resource):
@@ -52,9 +24,7 @@ class Location_List_Api(Api_Resource):
         return self.prep_json({'locations': result.data})
 
     def post(self):
-        # Schemas Validation
-        json_request = request.data.decode("utf-8")
-        data, errors = self.single_schema.loads(json_request)
+        data, errors = self.single_schema.load(request.get_json())
         if len(errors):
             return self.prep_json(errors, status='error', message=errors)
         print("DEBUG: validate")

@@ -23,7 +23,12 @@ class Event_Factory(factory.alchemy.SQLAlchemyModelFactory):
     title = factory.fuzzy.FuzzyText(length=20, prefix="Event_")
     subtitle = "kurz"
     desc = "Beschreibung"
+    is_pub = True
     dtstart = factory.fuzzy.FuzzyDate(datetime.datetime.now(), datetime.datetime.now()+datetime.timedelta(days=365))
+
+
+class Today_Event_Factory(Event_Factory):
+    dtstart = datetime.datetime.now()+datetime.timedelta(seconds=2)
 
 
 class Test_Event_Api(PlanlosApiTest):
@@ -42,65 +47,83 @@ class Test_Event_Api(PlanlosApiTest):
         # create_some_events
 
     def tearDown(self):
-        db.session.remove()
         db.drop_all()
+        db.session.remove()
 
-    def _create_event(self):
-        e = Event_Factory.create()
+    def _create_date(self):
+        date = factory.fuzzy.FuzzyNaiveDateTime(datetime.datetime.now(),
+                                                datetime.datetime.now()+datetime.timedelta(days=365))
+        return date.fuzz().isoformat()
+
+    def _create_event(self, today=False):
+        # switch factory
+        fac = Event_Factory
+        if today:
+            fac = Today_Event_Factory
+        else:
+            fac = Event_Factory
+        e = fac.create()
         print("DEBUG: ", e.id)
         Event_Cache.update(e)
         print(Event_Cache.query.all())
         return e
 
-    def test_eventlist(self):
-        self._create_event()
+    def test_empty_eventlist(self):
         r = self.client.get("/events/", follow_redirects=True)
         self.assert_200(r)
 
     def test_event_list(self):
-        e = self._create_event()
+        e = self._create_event(today=True)
         r = self.client.get("/events/", follow_redirects=True)
         self.assert_200(r)
-        self.assertEqual(len(r.json['events']), 1)
-        self.assertEqual(r.json['events'][0]['title'], e.title)
+        self.assertEqual(len(r.json['data']['events']), 1)
+        self.assertEqual(r.json['data']['events'][0]['title'], e.title)
 
     def test_event_list_multiple(self):
-        e1 = self._create_event()
-        e2 = self._create_event()
+        e1 = self._create_event(today=True)
+        e2 = self._create_event(today=True)
         r = self.client.get("/events/", follow_redirects=True)
         self.assert_200(r)
-        self.assertEqual(len(r.json['events']), 2)
-        self.assertEqual(r.json['events'][0]['title'], e1.title)
-        self.assertEqual(r.json['events'][1]['title'], e2.title)
-
+        self.assertEqual(len(r.json['data']['events']), 2)
+        self.assertEqual(r.json['data']['events'][0]['title'], e1.title)
+        self.assertEqual(r.json['data']['events'][1]['title'], e2.title)
 
     def test_post_event_create_new(self):
-        data = dict(title="MyEvent", subtitle="Simple Event", id=1)
+        data = dict(title="MyEvent", subtitle="Simple Event", id=1,
+                    location=dict(id=23, name='somewhere'),
+                    dtstart=str(self._create_date()))
+        print( "DICT", data)
+        print( "JSON", json.dumps(data))
         response = self.client.post('/events/', data=json.dumps(data),
-                                   content_type='application/json')
+                                    content_type='application/json')
+        print(response.json)
         self.assert_200(response)
         self.assertEqual(Event.query.all()[0].title, "MyEvent")
 
     def test_post_event_modify(self):
         l1 = self._create_event()
-        data = dict(id=1, title="MyEvent", subtitle="Simple Event")
-        response = self.client.patch('/events/1', data=json.dumps(data),
+        data = dict(id=l1.id, title="MyEvent", subtitle="Simple Event",
+                    dtstart=l1.dtstart.isoformat(),
+                    location=dict(id=23, name='somewhere')
+        )
+        response = self.client.post('/event/{0}'.format(l1.id), data=json.dumps(data),
                                      content_type='application/json')
-        self.assertEqual(response, 201)
+        self.assert_200(response)
         self.assertEqual(Event.query.all()[0].title, "MyEvent")
 
     def test_post_event_modify_404(self):
         e1 = self._create_event()
-        data = dict(id=2, title="MyEvent", subtitle="Simple Event")
-        response = self.client.patch('/events/2', data=json.dumps(data),
-                                     content_type='application/json')
+        data = dict(id=2, title="MyEvent", subtitle="Simple Event", location=dict(id=23, name='somewhere'),)
+        response = self.client.post('/event/2', data=json.dumps(data),
+                                    content_type='application/json')
         self.assert_404(response)
         self.assertEqual(Event.query.all()[0].title, e1.title)
 
     def test_event_by_id(self):
         e = self._create_event()
-        response = self.client.get('/events/{0}'.format(e.id))
+        response = self.client.get('/event/{0}'.format(e.id))
+        print(response.data)
         self.assert_200(response)
         print(response.json)
         json_response = response.json
-        self.assertEqual(json_response['event']['title'], e.title)
+        self.assertEqual(json_response['data']['title'], e.title)

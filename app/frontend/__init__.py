@@ -1,5 +1,5 @@
 # coding: utf-8
-from flask import render_template
+from flask import render_template, redirect, url_for
 from .. import factory
 from .. import assets
 from .context import *
@@ -64,6 +64,12 @@ def create_app(settings_override=None):
     app.context_processor(next_concert)
     app.context_processor(next_demo)
     app.context_processor(add_calendar_view)
+
+
+    @app.route("/")
+    def index():
+        return redirect(url_for('events.termine'))
+
 
     app.template_filter('date')(jinja2_filter_datetime)
     print((app.url_map))

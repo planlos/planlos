@@ -8,7 +8,7 @@ from flask.ext import restful
 from flask.ext.restful import fields, marshal_with
 from flask.ext.restful import reqparse
 
-from .mappings import *
+
 from .resources import Api_Resource
 
 from datetime import datetime
@@ -19,28 +19,10 @@ class Tags_Api(Api_Resource):
     def __init__(self):
         super(Tags_Api, self).__init__()
 
-    @marshal_with(tag_list)
     def get(self):
-        reqargs = reqparse.RequestParser()
-        reqargs.add_argument('query', type = str)
-        args = reqargs.parse_args()
-        args = { k:v for k,v in list(args.items()) if v is not None}
-        if 'query' in args:
-            return {'tags': Tag.query.filter(Tag.name.startswith(args['query'])) }
-        else:
-            return {'tags': Tag.query.all() }
+        pass
 
-    @marshal_with(tag_list)
     def post(self):
-        reqargs = reqparse.RequestParser()
-        reqargs.add_argument('name', type = str, required=True)
-        args = reqargs.parse_args()
-        args = { k:v for k,v in list(args.items()) if v is not None}
-        tag = Tag(name=args['name'])
-        return {'tags': tag} , 200
+        pass
 
 
-    def delete(self, id):
-        e = event_service.get_or_404(id)
-        event_service.delete(e)
-        return {'deleted': id}
