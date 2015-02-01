@@ -15,6 +15,9 @@ class Location_Schema(ma.Schema):
     class Meta:
         skip_missing = True
         exclude = ['created_at', 'is_pub', 'photos', 'tags']
+        fields = ('name', 'postal_code', 'id', 'shortdesc', 'desc', 'street_address', 'locality', 'region',
+                  'country_name', 'email_contact', 'openinghours', 'tel',
+                  'fax', 'url', 'longitude', 'latitude', 'modified_at')
 
 
 class Tag_Schema(ma.Schema):

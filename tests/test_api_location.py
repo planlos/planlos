@@ -112,3 +112,27 @@ class Test_Location_Api(PlanlosApiTest):
         print(response.json)
         json_response = response.json
         self.assertEqual(json_response['data']['name'], l.name)
+
+
+    def test_location_create_bad_schema(self):
+        data = dict(name="MyLocationNewName", shortdesc="Simple Location",
+                    email_contact="http://google.com", postal_code='edse32')
+        response = self.client.post('/locations/', data=json.dumps(data),
+                                     content_type='application/json')
+        self.assert_400(response)
+        print(response.json)
+        self.assertEqual('error', response.json['status'])
+        self.assertIn('email_contact', response.json['data'])
+        self.assertIn('postal_code', response.json['data'])
+
+    def test_location_modify_bad_schema(self):
+        l1 = self._create_location()
+        data = dict(id=1, name="MyLocationNewName", shortdesc="Simple Location",
+                    email_contact="http://google.com", postal_code='edse32')
+        response = self.client.post('/locations/1', data=json.dumps(data),
+                                     content_type='application/json')
+        self.assert_400(response)
+        print(response.json)
+        self.assertEqual('error', response.json['status'])
+        self.assertIn('email_contact', response.json['data'])
+        self.assertIn('postal_code', response.json['data'])
