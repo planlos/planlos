@@ -127,3 +127,18 @@ class Test_Event_Api(PlanlosApiTest):
         print(response.json)
         json_response = response.json
         self.assertEqual(json_response['data']['title'], e.title)
+
+    def test_event_create_range_recurring_days(self):
+        data = dict(title="MyEvent", subtitle="Simple Event",
+                    location=dict(id=23, name='somewhere'),
+                    dtstart=str(self._create_date()),
+                    dt)
+        print( "DICT", data)
+        print( "JSON", json.dumps(data))
+        response = self.client.post('/events/', data=json.dumps(data),
+                                    content_type='application/json')
+        print(response.json)
+        self.assert_200(response)
+        self.assertEqual(Event.query.all()[0].title, "MyEvent")
+        
+        

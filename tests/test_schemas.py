@@ -4,14 +4,14 @@ from app.models import User, Role
 from app import db
 import json
 
-from app.api.schemas import Location_Schema
-
+from app.api.schemas import Location_Schema, RRule_Schema
 from flask import jsonify
 
 import factory
 import factory.alchemy
 import factory.fuzzy
-
+from datetime import datetime
+from dateutil.rrule import *
 
 class Location_Factory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
@@ -57,3 +57,28 @@ class Test_Schemas(PlanlosApiTest):
         data = dict(shortdesc="Simple Location", id=1, is_pub=True)
         error = schema.validate(data)
         self.assertEqual(error, {'name': ['Missing data for required field.']})
+
+    def test_rrule_schema_validation(self):
+        schema = RRule_Schema()
+        data = dict(freq="WEEKLY", count=3, dtstart=str(datetime.now()))
+        error = schema.validate(data)
+        self.assertEqual(error, {})
+
+    def test_rrule_schema_validation_fail(self):
+        schema = RRule_Schema()
+        data = dict(freq="DOUBLEWEEKLY", count=3, dtstart=str(datetime.now()))
+        error = schema.validate(data)
+        self.assertIn('freq', error)
+
+    def test_rrule_schema_object_creation(self):
+        schema = RRule_Schema()
+        dtstart = datetime.now()
+        data = dict(freq="WEEKLY", count=3, dtstart=str(dtstart))
+        rr = rrule(WEEKLY, count=3, dtstart=dtstart)
+        obj, error = schema.load(data)
+        self.assertNotEqual(obj, None)
+        self.assertEqual(error, {})
+        self.assertEqual(type(rr), type(obj))
+        self.assertEqual(rr.__dict__, obj.__dict__)
+        self.assertEqual(list(rr), list(obj))
+        
