@@ -59,7 +59,7 @@ class Event_Service(Service):
             kwargs['dtstart'] = parser.parse(kwargs['dtstart'])
         if kwargs.get('dtend') and type(kwargs['dtend']) is str:
             kwargs['dtend'] = parser.parse(kwargs['dtend'])
-
+        print("DEBUG SERVICE: ", kwargs)
         return kwargs
 
     def get_by_date(self, day, end=None):

@@ -8,10 +8,10 @@ from app import db
 import factory
 import factory.alchemy
 import factory.fuzzy
-
+from nose.tools import nottest
 import datetime
 import json
-
+from dateutil.parser import parse
 
 class Event_Factory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
@@ -88,6 +88,18 @@ class Test_Event_Api(PlanlosApiTest):
         self.assertEqual(r.json['data']['events'][0]['title'], e1.title)
         self.assertEqual(r.json['data']['events'][1]['title'], e2.title)
 
+    def test_event_list_attributes(self):
+        event = self._create_event(today=True)
+        r = self.client.get("/events/", follow_redirects=True)
+        self.assert_200(r)
+        self.assertEqual(len(r.json['data']['events']), 1)
+        revent = r.json['data']['events'][0]
+        self.assertEqual(revent['title'], event.title)
+        self.assertEqual(parse(revent['dtstart'], ignoretz=True), event.dtstart)
+        self.assertEqual(revent['desc'], event.desc)
+        self.assertEqual(revent['subtitle'], event.subtitle)
+        self.assertEqual(revent['tags'], event.tags)
+        
     def test_post_event_create_new(self):
         data = dict(title="MyEvent", subtitle="Simple Event", id=1,
                     location=dict(id=23, name='somewhere'),
@@ -98,7 +110,11 @@ class Test_Event_Api(PlanlosApiTest):
                                     content_type='application/json')
         print(response.json)
         self.assert_200(response)
-        self.assertEqual(Event.query.all()[0].title, "MyEvent")
+        revent = Event.query.all()[0]
+        self.assertEqual(revent.title, "MyEvent")
+        self.assertEqual(revent.subtitle, data['subtitle'])
+        self.assertEqual(revent.dtstart, parse(data['dtstart']))
+        self.assertEqual(revent.location_id, data['location']['id'])
 
     def test_post_event_modify(self):
         l1 = self._create_event()
@@ -129,10 +145,11 @@ class Test_Event_Api(PlanlosApiTest):
         self.assertEqual(json_response['data']['title'], e.title)
 
     def test_event_create_range_recurring_days(self):
+        dtstart = self._create_date()
         data = dict(title="MyEvent", subtitle="Simple Event",
                     location=dict(id=23, name='somewhere'),
-                    dtstart=str(self._create_date()),
-                    dt)
+                    dtstart=str(dtstart),
+                    rrule = dict(freq='DAILY', count=3, dtstart=str(dtstart)))
         print( "DICT", data)
         print( "JSON", json.dumps(data))
         response = self.client.post('/events/', data=json.dumps(data),
@@ -140,5 +157,6 @@ class Test_Event_Api(PlanlosApiTest):
         print(response.json)
         self.assert_200(response)
         self.assertEqual(Event.query.all()[0].title, "MyEvent")
+        response = self.client.get('/events/')
         
         

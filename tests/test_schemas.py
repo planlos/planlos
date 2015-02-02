@@ -4,7 +4,7 @@ from app.models import User, Role
 from app import db
 import json
 
-from app.api.schemas import Location_Schema, RRule_Schema
+from app.api.schemas import Location_Schema, RRule_Schema, RRule_Field
 from flask import jsonify
 
 import factory
@@ -12,6 +12,14 @@ import factory.alchemy
 import factory.fuzzy
 from datetime import datetime
 from dateutil.rrule import *
+from nose.tools import nottest
+
+import marshmallow
+
+class TRR(marshmallow.Schema):
+    rrule = RRule_Field()
+
+
 
 class Location_Factory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
@@ -81,4 +89,37 @@ class Test_Schemas(PlanlosApiTest):
         self.assertEqual(type(rr), type(obj))
         self.assertEqual(rr.__dict__, obj.__dict__)
         self.assertEqual(list(rr), list(obj))
-        
+
+    @nottest
+    def test_rrule_schema_dump(self):
+        schema = RRule_Schema()
+        dtstart = datetime.now()
+        rr = rrule(WEEKLY, count=3, dtstart=dtstart)
+        obj, error = schema.dump(rr)
+        self.assertNotEqual(obj, None)
+        self.assertEqual(error, {})
+        self.assertEqual(type(rr), type(obj))
+        self.assertEqual(rr.__dict__, obj.__dict__)
+        self.assertEqual(list(rr), list(obj))
+
+
+    def test_rrule_field_serialize(self):
+        dtstart = datetime.now()
+        rr = rrule(WEEKLY, count=3, dtstart=dtstart)
+
+        trr = TRR()
+        j, error = trr.dump(dict(rrule=rr))
+        print(j)
+        self.assertEqual(rr._freq, j['rrule']['freq'])
+
+
+    def test_rrule_field_deserialize(self):
+        dtstart = datetime.now()
+        rr = rrule(WEEKLY, count=3, dtstart=dtstart)
+        in_data = dict(rrule=dict(freq='WEEKLY', dtstart=dtstart.isoformat(), count=3 ))
+        trr = TRR()
+        obj, error = trr.loads(json.dumps(in_data))
+        #print(j)
+        self.assertEqual(type(rr), type(obj['rrule']))
+        self.assertEqual(rr.__dict__, obj['rrule'].__dict__)
+

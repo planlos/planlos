@@ -105,7 +105,7 @@ class Event(db.Model):
     # if dtstart and dtend are None then rrule is used
     # date (start)
     # time (start)
-    dtstart = db.Column('dtstart', db.DateTime(),  nullable=True)
+    dtstart = db.Column('dtstart', db.DateTime(timezone=True),  nullable=True)
     # time (end) (datetime)
     dtend = db.Column('dtend', db.Time(),  nullable=True, default=None)
 

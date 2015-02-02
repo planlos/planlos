@@ -4,14 +4,14 @@ from .core import marshmallow as ma
 from flask import Markup
 from dateutil import parser
 from dateutil.rrule import *
-from marshmallow import ValidationError
+from marshmallow import ValidationError, fields
 
 
 class Location_Schema(ma.Schema):
     id = ma.Integer()
     name = ma.String(required=True)
     email_contact = ma.Email()
-    postal_code = ma.Decimal(as_string=True)
+    postal_code = ma.Integer(as_string=True)
     url = ma.Url()
 
     class Meta:
@@ -62,6 +62,7 @@ class RRule_Schema(ma.Schema):
     bymonthday = ma.Integer()
     byweekday = ma.Integer()
 
+
     def make_object(self, data):
         if data.get('interval') is None:
             interval = 1
@@ -79,6 +80,56 @@ class RRule_Schema(ma.Schema):
                      )
 
 
+class RRule_Field(fields.Field):
+    def _serialize(self, value, attr, obj):
+        if attr == 'rrule':
+            retval = dict()
+            for key, value in value.__dict__.items():
+                if value is None:
+                    continue
+                if key not in ['_freq', '_until', '_byweekday', '_dtstart', '_bysetpos', '_bymonth', '_count', '_bymonthday']:
+                    continue
+                if key == '_dtstart':
+                    value = value.isoformat()
+                retval.update({key[1:]: value})
+            return retval
+
+    def _deserialize(self, data):
+        if data.get('interval') is None:
+            interval = 1
+        else:
+            interval = data.get('interval')
+        return rrule(mapfreq(data.get('freq')),
+                     dtstart=parser.parse(data.get('dtstart')),
+                     until=data.get('until'),
+                     interval=interval,
+                     count=data.get('count'),
+                     bysetpos=data.get('bysetpos'),
+                     bymonth=data.get('bymonth'),
+                     bymonthday=data.get('bymonthday'),
+                     byweekday=data.get('byweekday'),
+                    )
+
+@RRule_Schema.preprocessor
+def create_fields(schema, in_data):
+    if 'rrule' in in_data:
+        rr = in_data['rrule']
+        in_data['dtstart'] = rr.dtstart
+        in_data['freq'] = rr.freq
+        in_data['interval'] = rr.interval
+        in_data['count'] = rr.count
+        in_data['until'] = rr.until
+        del in_data['rrule']
+    return in_data
+
+
+def rrule_validator(obj):
+    if type(obj) == rrule:
+        return True
+    else:
+        return False
+
+
 class Event_Schema(ma.Schema):
 
     def parse_date(self, obj):
@@ -91,12 +142,15 @@ class Event_Schema(ma.Schema):
     title = ma.String(required=True)
     location = ma.Nested(Location_Schema)
     tags = ma.Nested(Tag_Schema, many=True)
-    dtstart = ma.Method("parse_date", "deserialize_date", required=True)
+    #dtstart = ma.Method("parse_date", "deserialize_date", required=True)
+    dtstart = ma.DateTime(required=True)
+    #rrule = ma.Nested(RRule_Schema, default = None)
+    rrule = RRule_Field()
 
     class Meta:
         skip_missing = True
         exclude = ['is_pub', 'created_at', 'flyers', 'owner', 'owner_id']
-        additional = ('subtitle', 'desc', 'location_id', 'location', 'dtend', 'rrule')
+        additional = ('subtitle', 'desc', 'location_id', 'location', 'rrule', 'dtstart')
 
 
 @Location_Schema.preprocessor

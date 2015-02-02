@@ -45,11 +45,12 @@ class Event_List_Api(Api_Resource):
         data, errors = self.load_schema.loads(json_request)
         if len(errors):
             return self.prep_json(errors, status='error', message=errors)
-        print("DEBUG: validate")
-        errors = self.load_schema.validate(data)
-        if errors:
-            return self.prep_json(errors, status='fail')
+        #print("DEBUG: validate")
+        #errors = self.load_schema.validate(data)
+        #if errors:
+        #    return self.prep_json(errors, status='fail')
         e = event_service.create(**data)
+        print ("API: ", e.rrule )
         result = Event_Schema().dump(e)
         return self.prep_json({'events': result.data})
 
@@ -57,11 +58,11 @@ class Event_List_Api(Api_Resource):
 
 class Event_Api(Api_Resource):
     def __init__(self):
-        self.load_schema = Event_Schema(exclude='modified_at')
+        self.load_schema = Event_Schema(exclude=['modified_at'])
         self.schema = Event_Schema()
 
     def get(self, id):
-        result = Event_Schema().dump(event_service.get_or_404(id))
+        result = self.load_schema.dump(event_service.get_or_404(id))
         return self.prep_json(result.data)
 
     def post(self, id):
@@ -72,10 +73,6 @@ class Event_Api(Api_Resource):
         event = event_service.get_or_404(id)
         if len(errors):
             return self.prep_json(errors, status='error', message=errors)
-        print("DEBUG: validate")
-        errors = self.load_schema.validate(data)
-        if errors:
-            return self.prep_json(errors, status='fail')
         e = event_service.update(event, **data)
         result = self.schema.dump(e)
         return self.prep_json(result.data)
