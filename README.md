@@ -4,6 +4,36 @@ Calendar application based on Flask
 
 Frontend includes an admin interface based on Angular.js
 
+## Install
+
+virtualenv -p /usr/bin/python3 env
+
+. env/bin/activate
+
+pip install -r requirements.txt
+
+./wsgi.py
+
+
+## Testing
+
+nosetests
+
+
+## Frontend
+
+cd app/angular/static
+sudo npm install -g bower
+npm install 
+bower install
+grunt serve
+
+
+## Import DATA
+
+curl -X POST -H "Accept: application/json"  http://localhost:5000/api/tools/ -d "cmd=import_data"
+???
+
 
 
 ## API
