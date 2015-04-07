@@ -54,11 +54,13 @@ class Event_Service(Service):
             print("lOCATION", kwargs['location'])
             kwargs['location_id'] = kwargs['location']['id']
         kwargs.pop('location', None)
-        #
-        if type(kwargs['dtstart']) is str:
+
+        if kwargs.get('dtstart') and type(kwargs['dtstart']) is str:
             kwargs['dtstart'] = parser.parse(kwargs['dtstart'])
+
         if kwargs.get('dtend') and type(kwargs['dtend']) is str:
             kwargs['dtend'] = parser.parse(kwargs['dtend'])
+
         print("DEBUG SERVICE: ", kwargs)
         return kwargs
 

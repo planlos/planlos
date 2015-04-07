@@ -76,7 +76,7 @@ class Tools_Api(Api_Resource):
             e.subtitle = fields['short_desc'].encode('latin1').decode('utf-8', 'ignore')
             e.desc = fields['desc'].encode('latin1').decode('utf-8', 'ignore')
             e.is_pub = fields['is_pub']
-            e.dtstart = parse( fields['datum']+" "+fields['time'] )
+            e.dtstart = parse('{0} {1}'.format(fields['datum'], fields['time']))
             e.owner = User.query.get(1)
             ## get location
             loc_id = fields['location']
